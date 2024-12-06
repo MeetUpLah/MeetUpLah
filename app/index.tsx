@@ -37,6 +37,8 @@ export default function Index() {
       <View
           style={styles.container}
       >
+       <Text style={styles.title}>Itinify</Text>
+       <Text style={styles.description}>Your travel plans all in one app.</Text>
        <KeyboardAvoidingView behavior={'padding'}>
               <TextInput
                 style={styles.input}
@@ -50,6 +52,7 @@ export default function Index() {
                 style={styles.input}
                 placeholder='Password'
                 value={password}
+                secureTextEntry={true}
                 onChangeText={setPassword}
               />
 
@@ -79,4 +82,14 @@ const styles = StyleSheet.create({
         padding: 10,
         backgroundColor: `#fff`,
     },
+    title: {
+        fontSize: 58,
+        fontWeight: 'bold',
+        marginBottom: 20
+    },
+    description: {
+        fontSize: 20,
+        marginBottom: 20,
+        color: 'gray'
+    }
 });
