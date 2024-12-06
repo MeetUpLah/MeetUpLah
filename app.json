@@ -13,6 +13,7 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
+      "googleServiceFile": "./GoogleService-Info.plist",
       "supportsTablet": true
     },
     "android": {
@@ -27,7 +28,16 @@
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
-      "expo-router"
+      "expo-router",
+      "react-native-firebase/app",
+      [
+        "expo-build-properties",
+        {
+          "ios": {
+            "useFrameworks":"static"
+          }
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true
