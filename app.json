@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "meet-up-lah",
-    "slug": "meet-up-lah",
+    "slug": "itinifyapp",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -52,8 +52,9 @@
         "origin": false
       },
       "eas": {
-        "projectId": "6e5a0594-0dc0-4fa9-8f9d-9d103b19fd0a"
+        "projectId": "1f53eaf0-e484-4697-9c1c-e416a1bc321c"
       }
-    }
+    },
+    "owner": "itinifyapp"
   }
 }
