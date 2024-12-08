@@ -1,8 +1,7 @@
-import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
+import { Text, StyleSheet, TouchableOpacity, SafeAreaView, View } from 'react-native';
 import { useRouter } from "expo-router";
 
 export default function WelcomeScreen() {
-
     const router = useRouter();
 
     const handleGetStarted = () => {
@@ -10,44 +9,85 @@ export default function WelcomeScreen() {
     }
 
     return (
-        <View style={styles.container}>
-            <Text style={styles.title}>Welcome to Itinify</Text>
-            <TouchableOpacity style={styles.button} onPress={handleGetStarted}>
-                <Text style={styles.description}>Get started!</Text>
-            </TouchableOpacity>
-        </View>
+        <SafeAreaView style={styles.container}>
+            <View style={styles.contentContainer}>
+
+                <View style={styles.titleContainer}>
+                    <Text style={styles.title}>Welcome to Itinify</Text>
+                    <Text style={styles.description}>Your travel plans all in one app.</Text>
+                </View>
+
+
+                <TouchableOpacity style={styles.button} onPress={handleGetStarted}>
+                    <Text style={styles.buttonText}>Sign in</Text>
+                </TouchableOpacity>
+
+                <View style={styles.signUpContainer}>
+                    <Text style={styles.signUpText}>Don't have an account?</Text>
+                    <TouchableOpacity onPress={() => router.push('/screens/(auth)/register')}>
+                        <Text style={styles.signUpButton}>Sign up</Text>
+                    </TouchableOpacity>
+                </View>
+
+            </View>
+        </SafeAreaView>
     );
 }
 
-
 const styles = StyleSheet.create({
-   container: {
-       marginHorizontal: 20,
-       flex: 1,
-       justifyContent: 'center',
-       alignItems: 'center'
-   },
-    input: {
-        marginVertical: 4,
-        height: 50,
-        borderRadius: 4,
-        borderWidth: 1,
-        padding: 10,
-        backgroundColor: `#fff`,
+    container: {
+        flex: 1,
+        backgroundColor: '#fff',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    contentContainer: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingHorizontal: 20,
+    },
+    titleContainer: {
+        alignItems: 'flex-start',
+        marginBottom: 16,
+        width: 300
     },
     title: {
-        fontSize: 54,
+        fontSize: 45,
         fontWeight: 'bold',
-        marginBottom: 20
+        marginBottom: 5,
     },
     description: {
-        fontSize: 20,
-        color: 'white'
+        fontSize: 16,
+        marginBottom: 24,
+        color: '#696969',
     },
     button: {
-        backgroundColor: 'blue',
-        padding: 10,
+        backgroundColor: '#27272a',
+        paddingVertical: 12,
+        paddingHorizontal: 24,
         borderRadius: 4,
-        marginTop: 10
+        marginBottom: 16,
+        shadowOpacity: 0.2,
+        width: 300,
+        alignItems: 'center',
+    },
+    buttonText: {
+        color: '#fff',
+        fontSize: 16,
+        fontWeight: 'bold',
+    },
+    signUpContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    signUpText: {
+        fontSize: 14,
+        marginRight: 8,
+        color: '#696969',
+    },
+    signUpButton: {
+        fontSize: 14,
+        color: 'black',
+        fontWeight: 'bold',
     },
 });
