@@ -24,11 +24,7 @@ export default function LoginScreen() {
         router.push('./register');
     }
 
-    const handleGetStarted = () => {
-        router.push('/screens/(auth)/login');
-    }
-
-    const signIn = async () => {
+    const handleSignIn = async () => {
         setLoading(true);
         try {
             await auth().signInWithEmailAndPassword(email, password);
@@ -75,7 +71,7 @@ export default function LoginScreen() {
                 {loading ? (<ActivityIndicator size='small' color='blue' />) : (
                     <>
                         <View style={styles.buttonContainer}>
-                            <TouchableOpacity style={styles.button} onPress={handleGetStarted}>
+                            <TouchableOpacity style={styles.button} onPress={handleSignIn}>
                                 <Text style={styles.buttonText}>Sign in</Text>
                             </TouchableOpacity>
 
@@ -83,7 +79,7 @@ export default function LoginScreen() {
 
                             <View style={styles.signUpContainer}>
                                 <Text style={styles.signUpText}>Don't have an account?</Text>
-                                <TouchableOpacity onPress={() => router.push('/screens/(auth)/register')}>
+                                <TouchableOpacity onPress={handleCreateAccount}>
                                     <Text style={styles.signUpButton}>Sign up</Text>
                                 </TouchableOpacity>
                             </View>
