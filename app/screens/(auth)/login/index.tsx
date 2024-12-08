@@ -8,8 +8,8 @@ import {
     SafeAreaView, TouchableOpacity
 } from 'react-native';
 import { useState } from "react";
-import auth from '@react-native-firebase/auth';
 import {useRouter} from "expo-router";
+import { signIn } from '@/app/hooks/authUtils';
 
 export default function LoginScreen() {
 
@@ -24,15 +24,7 @@ export default function LoginScreen() {
     }
 
     const handleSignIn = async () => {
-        setLoading(true);
-        try {
-            await auth().signInWithEmailAndPassword(email, password);
-            alert('Logged in');
-        } catch (e: any) {
-            alert("Login failed: " + e.message);
-        } finally {
-            setLoading(false);
-        }
+        await signIn(email, password, setLoading);
     }
 
     return (

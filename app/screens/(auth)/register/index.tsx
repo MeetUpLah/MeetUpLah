@@ -4,14 +4,13 @@ import {
     StyleSheet,
     KeyboardAvoidingView,
     TextInput,
-    Button,
     ActivityIndicator,
     TouchableOpacity,
     SafeAreaView
 } from 'react-native';
 import { useState } from "react";
-import auth from '@react-native-firebase/auth';
 import {useRouter} from "expo-router";
+import { signUp } from '@/app/hooks/authUtils';
 
 export default function RegisterScreen() {
     const [email, setEmail] = useState('');
@@ -21,15 +20,7 @@ export default function RegisterScreen() {
     const router = useRouter();
 
     const handleSignUp = async () => {
-        setLoading(true);
-        try {
-            await auth().createUserWithEmailAndPassword(email, password);
-            alert('Account created');
-        } catch (e: any) {
-            alert("Registration failed: " + e.message);
-        } finally {
-            setLoading(false);
-        }
+        await signUp(email, password, setLoading);
     }
 
     const handleBack = () => {
