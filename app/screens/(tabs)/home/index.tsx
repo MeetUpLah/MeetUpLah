@@ -1,10 +1,17 @@
 import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import auth from "@react-native-firebase/auth";
+import {Link, useRouter} from "expo-router";
 
 export default function HomeScreen() {
 
     // Get the currently signed-in user
     const user = auth().currentUser;
+    const router = useRouter();
+
+    const handleAddTrip = () => {
+        router.push("/screens/home/components/addTrip");
+    }
+
 
     return (
         <View style={styles.container}>
@@ -13,6 +20,12 @@ export default function HomeScreen() {
                 <TouchableOpacity style={styles.buttonContainer} onPress={() => auth().signOut()}>
                     <Text style={styles.buttonText}> Sign out</Text>
                 </TouchableOpacity>
+
+                <TouchableOpacity style={styles.buttonContainer} onPress={handleAddTrip}>
+                    <Text style={styles.buttonText}>Add Trip</Text>
+                </TouchableOpacity>
+
+                {/*<Link href="/screens/home/components/addTrip">Enter tab 1's stack</Link>*/}
             </View>
         </View>
     );
