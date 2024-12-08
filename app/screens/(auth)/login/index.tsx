@@ -4,7 +4,6 @@ import {
     StyleSheet,
     KeyboardAvoidingView,
     TextInput,
-    Button,
     ActivityIndicator,
     SafeAreaView, TouchableOpacity
 } from 'react-native';
@@ -37,9 +36,7 @@ export default function LoginScreen() {
     }
 
     return (
-        <SafeAreaView
-            style={styles.container}
-        >
+        <SafeAreaView style={styles.container}>
             <Text style={styles.title}>Login</Text>
             <Text style={styles.description}>Your travel plans all in one app.</Text>
 
@@ -97,7 +94,7 @@ const styles = StyleSheet.create({
     container: {
         marginHorizontal: 20,
         flex: 1,
-        justifyContent: 'center'
+        justifyContent: 'center',
     },
     input: {
         marginVertical: 4,
