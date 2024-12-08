@@ -31,10 +31,10 @@ export default function RootLayout() {
             return;
         }
 
-        const inAuthGroup = segments[1] === '(auth)';
+        const inAuthGroup = segments[1] === '(tabs)';
 
         if (user && !inAuthGroup) {
-            router.replace('/screens/(auth)/home');
+            router.replace('/screens/(tabs)/home');
         } else if (!user && inAuthGroup) {
             router.replace('/');
         }
@@ -58,6 +58,7 @@ export default function RootLayout() {
       <Stack>
         <Stack.Screen name="index" options={{ headerShown: false}}/>
         <Stack.Screen name={'screens/(auth)'} options={{ headerShown: false}}/>
+        <Stack.Screen name={'screens/(tabs)'} options={{ headerShown: false}}/>
       </Stack>
     );
 }

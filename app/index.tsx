@@ -1,95 +1,93 @@
-import {Text, View, StyleSheet, KeyboardAvoidingView, TextInput, Button, ActivityIndicator} from 'react-native';
-import { useState } from "react";
-import auth from '@react-native-firebase/auth';
+import { Text, StyleSheet, TouchableOpacity, SafeAreaView, View } from 'react-native';
+import { useRouter } from "expo-router";
 
-export default function Index() {
+export default function WelcomeScreen() {
+    const router = useRouter();
 
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [loading, setLoading] = useState(false);
-
-    const signUp = async () => {
-        setLoading(true);
-        try {
-            await auth().createUserWithEmailAndPassword(email, password);
-            alert('Account created');
-        } catch (e: any) {
-            alert("Registration failed: " + e.message);
-        } finally {
-            setLoading(false);
-        }
-    }
-
-
-    const signIn = async () => {
-        setLoading(true);
-        try {
-            await auth().signInWithEmailAndPassword(email, password);
-            alert('Logged in');
-        } catch (e: any) {
-            alert("Login failed: " + e.message);
-        } finally {
-            setLoading(false);
-        }
+    const handleGetStarted = () => {
+        router.push('/screens/(auth)/login');
     }
 
     return (
-      <View
-          style={styles.container}
-      >
-       <Text style={styles.title}>Itinify</Text>
-       <Text style={styles.description}>Your travel plans all in one app.</Text>
-       <KeyboardAvoidingView behavior={'padding'}>
-              <TextInput
-                style={styles.input}
-                placeholder='Email'
-                value={email}
-                onChangeText={setEmail}
-                keyboardType='email-address'
+        <SafeAreaView style={styles.container}>
+            <View style={styles.contentContainer}>
 
-              />
-              <TextInput
-                style={styles.input}
-                placeholder='Password'
-                value={password}
-                secureTextEntry={true}
-                onChangeText={setPassword}
-              />
+                <View style={styles.titleContainer}>
+                    <Text style={styles.title}>Welcome to Itinify</Text>
+                    <Text style={styles.description}>Your travel plans all in one app.</Text>
+                </View>
 
-           {loading ? (<ActivityIndicator size='small' color='blue' />) : (
-                <>
-                 <Button title='Create an account' onPress={signUp}/>
-                 <Button title='Sign In' onPress={signIn}/>
-                </>
-           )}
-            </KeyboardAvoidingView>
-      </View>
+
+                <TouchableOpacity style={styles.button} onPress={handleGetStarted}>
+                    <Text style={styles.buttonText}>Sign in</Text>
+                </TouchableOpacity>
+
+                <View style={styles.signUpContainer}>
+                    <Text style={styles.signUpText}>Don't have an account?</Text>
+                    <TouchableOpacity onPress={() => router.push('/screens/(auth)/register')}>
+                        <Text style={styles.signUpButton}>Sign up</Text>
+                    </TouchableOpacity>
+                </View>
+
+            </View>
+        </SafeAreaView>
     );
 }
 
-
 const styles = StyleSheet.create({
-   container: {
-       marginHorizontal: 20,
-       flex: 1,
-       justifyContent: 'center'
-   },
-    input: {
-        marginVertical: 4,
-        height: 50,
-        borderRadius: 4,
-        borderWidth: 1,
-        padding: 10,
-        backgroundColor: `#fff`,
+    container: {
+        flex: 1,
+        backgroundColor: '#fff',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    contentContainer: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingHorizontal: 20,
+    },
+    titleContainer: {
+        alignItems: 'flex-start',
+        marginBottom: 16,
+        width: 300
     },
     title: {
-        fontSize: 58,
+        fontSize: 45,
         fontWeight: 'bold',
-        marginBottom: 20
+        marginBottom: 5,
     },
     description: {
-        fontSize: 20,
-        marginBottom: 20,
-        color: 'gray'
-    }
+        fontSize: 16,
+        marginBottom: 24,
+        color: '#696969',
+    },
+    button: {
+        backgroundColor: '#27272a',
+        paddingVertical: 12,
+        paddingHorizontal: 24,
+        borderRadius: 4,
+        marginBottom: 16,
+        shadowOpacity: 0.2,
+        width: 300,
+        alignItems: 'center',
+    },
+    buttonText: {
+        color: '#fff',
+        fontSize: 16,
+        fontWeight: 'bold',
+    },
+    signUpContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    signUpText: {
+        fontSize: 14,
+        marginRight: 8,
+        color: '#696969',
+    },
+    signUpButton: {
+        fontSize: 14,
+        color: 'black',
+        fontWeight: 'bold',
+    },
 });
