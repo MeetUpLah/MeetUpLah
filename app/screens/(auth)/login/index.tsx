@@ -1,4 +1,13 @@
-import {Text, View, StyleSheet, KeyboardAvoidingView, TextInput, Button, ActivityIndicator} from 'react-native';
+import {
+    Text,
+    View,
+    StyleSheet,
+    KeyboardAvoidingView,
+    TextInput,
+    Button,
+    ActivityIndicator,
+    SafeAreaView, TouchableOpacity
+} from 'react-native';
 import { useState } from "react";
 import auth from '@react-native-firebase/auth';
 import {useRouter} from "expo-router";
@@ -15,6 +24,9 @@ export default function LoginScreen() {
         router.push('./register');
     }
 
+    const handleGetStarted = () => {
+        router.push('/screens/(auth)/login');
+    }
 
     const signIn = async () => {
         setLoading(true);
@@ -29,36 +41,58 @@ export default function LoginScreen() {
     }
 
     return (
-        <View
+        <SafeAreaView
             style={styles.container}
         >
-            <Text style={styles.title}>Itinify</Text>
+            <Text style={styles.title}>Login</Text>
             <Text style={styles.description}>Your travel plans all in one app.</Text>
-            <KeyboardAvoidingView behavior={'padding'}>
-                <TextInput
-                    style={styles.input}
-                    placeholder='Email'
-                    value={email}
-                    onChangeText={setEmail}
-                    keyboardType='email-address'
 
-                />
-                <TextInput
-                    style={styles.input}
-                    placeholder='Password'
-                    value={password}
-                    secureTextEntry={true}
-                    onChangeText={setPassword}
-                />
+            <KeyboardAvoidingView behavior={'padding'}>
+
+                <View style={styles.fieldContainer}>
+                    <Text style={styles.fieldText}>Email</Text>
+                    <TextInput
+                        style={styles.input}
+                        placeholder='Email'
+                        value={email}
+                        onChangeText={setEmail}
+                        keyboardType='email-address'
+
+                    />
+                </View>
+
+                <View style={styles.fieldContainer}>
+                    <Text style={styles.fieldText}>Password</Text>
+                    <TextInput
+                        style={styles.input}
+                        placeholder='Password'
+                        value={password}
+                        secureTextEntry={true}
+                        onChangeText={setPassword}
+                    />
+                </View>
 
                 {loading ? (<ActivityIndicator size='small' color='blue' />) : (
                     <>
-                        <Button title='Create an account' onPress={handleCreateAccount}/>
-                        <Button title='Sign In' onPress={signIn}/>
+                        <View style={styles.buttonContainer}>
+                            <TouchableOpacity style={styles.button} onPress={handleGetStarted}>
+                                <Text style={styles.buttonText}>Sign in</Text>
+                            </TouchableOpacity>
+
+                            <Text style={styles.normalText}>OR CONTINUE WITH</Text>
+
+                            <View style={styles.signUpContainer}>
+                                <Text style={styles.signUpText}>Don't have an account?</Text>
+                                <TouchableOpacity onPress={() => router.push('/screens/(auth)/register')}>
+                                    <Text style={styles.signUpButton}>Sign up</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+
                     </>
                 )}
             </KeyboardAvoidingView>
-        </View>
+        </SafeAreaView>
     );
 }
 
@@ -78,13 +112,59 @@ const styles = StyleSheet.create({
         backgroundColor: `#fff`,
     },
     title: {
-        fontSize: 58,
+        fontSize: 50,
         fontWeight: 'bold',
-        marginBottom: 20
+        marginBottom: 5
     },
     description: {
         fontSize: 20,
         marginBottom: 20,
         color: 'gray'
+    },
+    fieldText: {
+        fontSize: 14,
+        fontWeight: 'bold',
+    },
+    fieldContainer: {
+        marginVertical: 8
+    },
+    signUpContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    signUpText: {
+        fontSize: 14,
+        marginRight: 8,
+        color: '#696969',
+    },
+    signUpButton: {
+        fontSize: 14,
+        color: 'black',
+        fontWeight: 'bold',
+    },
+    button: {
+        backgroundColor: '#27272a',
+        paddingVertical: 12,
+        paddingHorizontal: 24,
+        borderRadius: 4,
+        marginVertical: 16,
+        shadowOpacity: 0.2,
+        width: 300,
+        alignItems: 'center',
+    },
+    buttonText: {
+        color: '#fff',
+        fontSize: 16,
+        fontWeight: 'bold',
+    },
+    buttonContainer: {
+        alignItems: 'center',
+    },
+    normalText: {
+        fontSize: 14,
+        color: 'black',
+        fontWeight: 'bold',
+        marginTop: 10,
+        marginBottom: 20,
     }
 });
