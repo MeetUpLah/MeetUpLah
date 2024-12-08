@@ -1,7 +1,7 @@
 import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import auth from "@react-native-firebase/auth";
 
-export default function Home() {
+export default function HomeScreen() {
 
     // Get the currently signed-in user
     const user = auth().currentUser;
