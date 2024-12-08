@@ -1,69 +1,21 @@
-import {Text, View, StyleSheet, KeyboardAvoidingView, TextInput, Button, ActivityIndicator} from 'react-native';
-import { useState } from "react";
-import auth from '@react-native-firebase/auth';
+import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
+import { useRouter } from "expo-router";
 
-export default function Index() {
+export default function WelcomeScreen() {
 
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [loading, setLoading] = useState(false);
+    const router = useRouter();
 
-    const signUp = async () => {
-        setLoading(true);
-        try {
-            await auth().createUserWithEmailAndPassword(email, password);
-            alert('Account created');
-        } catch (e: any) {
-            alert("Registration failed: " + e.message);
-        } finally {
-            setLoading(false);
-        }
-    }
-
-
-    const signIn = async () => {
-        setLoading(true);
-        try {
-            await auth().signInWithEmailAndPassword(email, password);
-            alert('Logged in');
-        } catch (e: any) {
-            alert("Login failed: " + e.message);
-        } finally {
-            setLoading(false);
-        }
+    const handleGetStarted = () => {
+        router.push('/screens/(auth)/login');
     }
 
     return (
-      <View
-          style={styles.container}
-      >
-       <Text style={styles.title}>Itinify</Text>
-       <Text style={styles.description}>Your travel plans all in one app.</Text>
-       <KeyboardAvoidingView behavior={'padding'}>
-              <TextInput
-                style={styles.input}
-                placeholder='Email'
-                value={email}
-                onChangeText={setEmail}
-                keyboardType='email-address'
-
-              />
-              <TextInput
-                style={styles.input}
-                placeholder='Password'
-                value={password}
-                secureTextEntry={true}
-                onChangeText={setPassword}
-              />
-
-           {loading ? (<ActivityIndicator size='small' color='blue' />) : (
-                <>
-                 <Button title='Create an account' onPress={signUp}/>
-                 <Button title='Sign In' onPress={signIn}/>
-                </>
-           )}
-            </KeyboardAvoidingView>
-      </View>
+        <View style={styles.container}>
+            <Text style={styles.title}>Welcome to Itinify</Text>
+            <TouchableOpacity style={styles.button} onPress={handleGetStarted}>
+                <Text style={styles.description}>Get started!</Text>
+            </TouchableOpacity>
+        </View>
     );
 }
 
@@ -72,7 +24,8 @@ const styles = StyleSheet.create({
    container: {
        marginHorizontal: 20,
        flex: 1,
-       justifyContent: 'center'
+       justifyContent: 'center',
+       alignItems: 'center'
    },
     input: {
         marginVertical: 4,
@@ -83,13 +36,18 @@ const styles = StyleSheet.create({
         backgroundColor: `#fff`,
     },
     title: {
-        fontSize: 58,
+        fontSize: 54,
         fontWeight: 'bold',
         marginBottom: 20
     },
     description: {
         fontSize: 20,
-        marginBottom: 20,
-        color: 'gray'
-    }
+        color: 'white'
+    },
+    button: {
+        backgroundColor: 'blue',
+        padding: 10,
+        borderRadius: 4,
+        marginTop: 10
+    },
 });
