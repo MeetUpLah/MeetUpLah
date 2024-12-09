@@ -1,8 +1,10 @@
 import {View, Text, StyleSheet, TouchableOpacity, TextInput} from 'react-native';
-import {useRouter} from "expo-router";
-import firestore from "@react-native-firebase/firestore"
-import {useEffect, useState} from "react";
+import { useRouter } from "expo-router";
+import { useState } from "react";
+import firestore from "@react-native-firebase/firestore";
 import auth from "@react-native-firebase/auth";
+
+
 
 export default function AddTripScreen() {
 
@@ -25,7 +27,7 @@ export default function AddTripScreen() {
             .collection('trips')
             .doc(currentUser.uid)
             .collection('userTrips') // Subcollection for the user's trips
-            .add({ // Add a new trip document
+            .add({ // Add a new trip document, unique Id set by firestore
                 Name: name,
                 Accommodation: accommodation,
                 Flight: flight,
