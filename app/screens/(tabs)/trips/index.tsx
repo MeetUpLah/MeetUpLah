@@ -5,13 +5,13 @@ export default function TripsScreen() {
 
     const router = useRouter();
 
-    const handleAddTrip = () => {
+        const handleAddTrip = () => {
         router.push("/screens/trips/components/addTrip");
     }
 
     return (
         <View style={styles.container}>
-            <Text style={{fontWeight: "bold"}}>Trips Page</Text>
+            <Text style={styles.title}>Trips Page</Text>
             <TouchableOpacity style={styles.buttonContainer} onPress={handleAddTrip}>
                 <Text style={styles.buttonText}>Add Trip</Text>
             </TouchableOpacity>
@@ -24,6 +24,11 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
+    },
+    title: {
+        fontSize: 30,
+        fontWeight: 'bold',
+        marginBottom: 20
     },
     buttonContainer: {
         backgroundColor: 'black',
