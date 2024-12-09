@@ -19,7 +19,7 @@ export default function TabLayout() {
                 }}
             />
             <Tabs.Screen
-                name="trips/index"
+                name="trips"
                 options={{
                     title: 'Trips',
                     tabBarIcon: ({ color }) => <FontAwesome size={28} name="plane" color={color} />,
