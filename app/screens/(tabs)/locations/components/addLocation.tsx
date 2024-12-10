@@ -38,7 +38,10 @@ export default function AddLocationScreen() {
             .doc(userId)
             .collection('countries')
             .doc(country)
-            .set({ country: country }) // Add country field
+            .set({
+                country: country,
+                categories: firestore.FieldValue.arrayUnion(category)
+            }, { merge: true}) // Add country into country field and category into categories field
             .then(() => {
                 return firestore().collection('locations')
                     .doc(userId)
