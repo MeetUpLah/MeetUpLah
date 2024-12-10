@@ -38,22 +38,29 @@ export default function AddLocationScreen() {
             .doc(userId)
             .collection('countries')
             .doc(country)
-            .collection(category)
-            .add({
-                Name: name,
-                Description: description,
-                Address: address,
-                createdAt: firestore.FieldValue.serverTimestamp(),
-
-            }).then(() => {
+            .set({ country: country }) // Add country field
+            .then(() => {
+                return firestore().collection('locations')
+                    .doc(userId)
+                    .collection('countries')
+                    .doc(country)
+                    .collection(category)
+                    .add({
+                        Name: name,
+                        Description: description,
+                        Address: address,
+                        createdAt: firestore.FieldValue.serverTimestamp(),
+                    });
+            })
+            .then(() => {
                 console.log('Location added!');
                 setName('');
                 setDescription('');
                 setAddress('');
                 setCountry('');
                 setCategory('');
-
-            }).catch((error) => {
+            })
+            .catch((error) => {
                 console.error('Error adding location:', error);
             });
 
