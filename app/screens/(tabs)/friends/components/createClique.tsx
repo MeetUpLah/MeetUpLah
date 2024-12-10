@@ -1,9 +1,10 @@
 import { View, Text } from 'react-native'
 import React from 'react'
 import firestore from '@react-native-firebase/firestore'
-import { useRouter } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 
 const createClique = async(groupName:string, group:string[], router:any) => {
+
     if (!groupName.trim()) {
         throw new Error('Group name cannot be empty.');
       }
@@ -14,6 +15,7 @@ const createClique = async(groupName:string, group:string[], router:any) => {
       try {
         const db = firestore().collection('cliques').doc(groupName)
         const subcollection = db.collection('members')
+        db.set({name: 'Bob', groupName})
         for(let i = 0; i < group.length; i++) {
             const memberName = group[i];
             if (memberName.trim()) {
@@ -21,7 +23,7 @@ const createClique = async(groupName:string, group:string[], router:any) => {
       }
         }
         console.log('successfully added')
-        router.back()
+        router.back();
       } catch(error) {
         console.error('Problem as occured')
       }
