@@ -62,6 +62,7 @@ export default function AddLocationScreen() {
                 setAddress('');
                 setCountry('');
                 setCategory('');
+                alert('Location added!');
             })
             .catch((error) => {
                 console.error('Error adding location:', error);
