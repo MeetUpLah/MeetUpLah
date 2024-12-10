@@ -44,9 +44,17 @@ export default function ViewLocationScreen() {
         fetchCategories();
     }, [country]);
 
-    const renderCategoryCard = ({ item }: {item: String}) => (
+    const goToViewCategory = (category: string) => {
+        router.push({
+            pathname: "/screens/locations/components/viewCategory",
+            params: {category: category, country: country}
+        })
+    }
+
+    const renderCategoryCard = ({ item }: {item: string}) => (
         <TouchableOpacity
             style={styles.categoryCard}
+            onPress={() => goToViewCategory(item)}
         >
             <Text style ={styles.categoryText}>{item}</Text>
         </TouchableOpacity>
