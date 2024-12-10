@@ -21,6 +21,13 @@ export default function LocationsScreen() {
         router.push("/screens/locations/components/addLocation")
     }
 
+    const goToViewLocation = (country: string) => {
+        router.push({
+            pathname: "/screens/locations/components/viewLocation",
+            params: {country: country}
+        })
+    }
+
     useEffect(() => {
         const subscriber = firestore()
             .collection('locations')
@@ -45,7 +52,9 @@ export default function LocationsScreen() {
     }, []);
 
     const renderLocationCard = ({ item }: {item: Location}) => (
-        <TouchableOpacity style={styles.locationCard}>
+        <TouchableOpacity
+            style={styles.locationCard}
+            onPress={() => goToViewLocation(item.country || '')}>
             <Text style ={styles.locationText}>{item.country}</Text>
         </TouchableOpacity>
     );
