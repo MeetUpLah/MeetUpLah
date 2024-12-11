@@ -47,13 +47,15 @@ export default function FriendsScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.title}>Clique Page</Text>
-      <TouchableOpacity
-        style={styles.buttonContainer}
-        onPress={handleAddClique}
-      >
-        <Text style={styles.buttonText}>Add Clique</Text>
-      </TouchableOpacity>
+      <View style={styles.header}>
+        <Text style={styles.title}>Clique Page</Text>
+        <TouchableOpacity
+          style={styles.buttonContainer}
+          onPress={handleAddClique}
+        >
+          <Text style={styles.buttonText}>Add Clique</Text>
+        </TouchableOpacity>
+      </View>
       <FlatList
         data={list}
         keyExtractor={(data, index) => index.toString()}
@@ -70,6 +72,7 @@ export default function FriendsScreen() {
             <Text style={styles.groupName}>{item}</Text>
           </TouchableOpacity>
         )}
+        style={styles.list}
       />
     </SafeAreaView>
   );
@@ -78,20 +81,20 @@ export default function FriendsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
   },
   title: {
-    fontSize: 30,
+    fontSize: 50,
     fontWeight: "bold",
     marginBottom: 20,
+    position: "relative",
   },
   buttonContainer: {
     backgroundColor: "black",
     borderRadius: 5,
-    paddingVertical: 10,
     paddingHorizontal: 10,
-    width: 110,
+    width: 100,
+    justifyContent: "center",
+    height: 64,
   },
   buttonText: {
     color: "white",
@@ -103,16 +106,23 @@ const styles = StyleSheet.create({
     backgroundColor: "aquamarine",
     borderRadius: 5,
     paddingVertical: 20,
-    paddingTop: 30,
     paddingHorizontal: 50,
     width: 350,
-    marginTop: 5,
+    marginTop: 10,
     marginBottom: 10,
-    height: 100,
+    height: 75,
+    alignSelf: "center",
   },
   groupName: {
     fontSize: 30,
     fontWeight: 300,
     textAlign: "center",
+  },
+  header: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  list: {
+    marginTop: 10,
   },
 });

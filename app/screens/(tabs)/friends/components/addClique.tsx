@@ -42,11 +42,15 @@ export default function addClique() {
         style={styles.answerContainers}
       />
       <Button title="Add Friend" onPress={handleAddList} />
-      <FlatList
-        data={list}
-        keyExtractor={(item, index) => index.toString()}
-        renderItem={({ item }) => <Text>{item}</Text>}
-      />
+      {groupName && <Text style={styles.groupName}>{groupName}</Text>}
+      {list.length > 0 && (
+        <FlatList
+          data={list}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={({ item }) => <Text style={styles.Friends}>{item}</Text>}
+          style={styles.list}
+        />
+      )}
       <Button
         title="Create Clique"
         onPress={async () => {
@@ -73,5 +77,30 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     borderWidth: 3,
     height: 50,
+    width: 260,
+    alignSelf: "center",
+    textAlign: "center",
+    fontSize: 25,
+  },
+  Friends: {
+    textAlign: "center",
+    fontSize: 25,
+    backgroundColor: "aquamarine",
+    margin: 5,
+    borderWidth: 2,
+    paddingVertical: 20,
+  },
+  list: {
+    marginTop: 30,
+  },
+  groupName: {
+    textAlign: "center",
+    fontWeight: "300",
+    fontSize: 50,
+    borderWidth: 2,
+    backgroundColor: "red",
+    width: 400,
+    alignSelf: "center",
+    color: "white",
   },
 });
