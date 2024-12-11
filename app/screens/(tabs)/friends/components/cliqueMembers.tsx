@@ -1,11 +1,12 @@
-import { View, Text, FlatList, StyleSheet } from "react-native";
+import { View, Text, FlatList, StyleSheet, Button } from "react-native";
 import React, { useCallback, useEffect, useState } from "react";
-import { useFocusEffect, useLocalSearchParams } from "expo-router";
+import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import firestore from "@react-native-firebase/firestore";
 
 const cliqueMembers = () => {
   const params = useLocalSearchParams();
+  const router = useRouter();
   const groupName = Array.isArray(params.groupName)
     ? params.groupName[0]
     : params.groupName;
@@ -40,6 +41,15 @@ const cliqueMembers = () => {
 
   return (
     <SafeAreaView>
+      <Button
+        title="Add more friends?"
+        onPress={() => {
+          router.push({
+            pathname: "/screens/friends/components/addFriends",
+            params: { groupName: groupName },
+          });
+        }}
+      />
       <FlatList
         data={list}
         keyExtractor={(item, index) => index.toString()}
