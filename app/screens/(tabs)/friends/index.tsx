@@ -14,7 +14,6 @@ export default function FriendsScreen() {
   const router = useRouter();
 
   const [list, setList] = useState<string[]>([]);
-  const [reload, setreload] = useState(false);
 
   const handleAddClique = () => {
     router.push({
