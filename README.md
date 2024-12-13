@@ -1,4 +1,4 @@
-# Welcome to Itinify :plane:
+# Welcome to Itinify ✈️
 
 ## Get started
 
