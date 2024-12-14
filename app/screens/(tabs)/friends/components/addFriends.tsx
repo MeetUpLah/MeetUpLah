@@ -20,6 +20,9 @@ export default function addFriends() {
   const groupName = Array.isArray(params.groupName)
     ? params.groupName[0]
     : params.groupName;
+  const username = Array.isArray(params.username)
+    ? params.username[0]
+    : params.username;
 
   const handleAddFriend = () => {
     if (userInput.trim()) {
@@ -50,7 +53,7 @@ export default function addFriends() {
         title="Confirm"
         onPress={async () => {
           try {
-            await createClique(groupName, memberList, router);
+            await createClique(groupName, memberList, router, username);
           } catch (error: any) {
             alert(error.message);
           }

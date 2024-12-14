@@ -10,6 +10,9 @@ const cliqueMembers = () => {
   const groupName = Array.isArray(params.groupName)
     ? params.groupName[0]
     : params.groupName;
+  const username = Array.isArray(params.username)
+    ? params.username[0]
+    : params.username;
   const [list, setList] = useState<string[]>([]);
 
   const fetchClique = async () => {
@@ -46,7 +49,7 @@ const cliqueMembers = () => {
         onPress={() => {
           router.push({
             pathname: "/screens/friends/components/addFriends",
-            params: { groupName: groupName },
+            params: { groupName: groupName, username: username },
           });
         }}
       />

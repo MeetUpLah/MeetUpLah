@@ -9,25 +9,50 @@ import {
 import firestore from "@react-native-firebase/firestore";
 import { useCallback, useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
+import auth from "@react-native-firebase/auth";
 
 export default function FriendsScreen() {
   const router = useRouter();
+  const user = auth().currentUser;
+  const email = user?.email;
 
   const [list, setList] = useState<string[]>([]);
+  const [username, setUsername] = useState("");
 
   const handleAddClique = () => {
     router.push({
       pathname: "/screens/friends/components/addClique",
+      params: { username: username },
     });
+  };
+
+  const fetchUser = async () => {
+    try {
+      const users = await firestore().collection("users").get();
+      let fetchedusername = "";
+      users.forEach((doc) => {
+        const data = doc.data();
+        if (email === data.email.toLowerCase()) {
+          fetchedusername = data.username;
+          console.log("fetched user" + fetchedusername);
+          setUsername(fetchedusername);
+          console.log(username);
+        }
+      });
+      console.log(username);
+    } catch (Error) {
+      console.log("error in fetching username");
+    }
   };
 
   const fetchCliques = async () => {
     try {
+      await fetchUser();
       const db = await firestore().collection("cliques").get();
       const filteredCliques: string[] = [];
       db.forEach((doc) => {
         const data = doc.data();
-        if (data.name === "Bob") {
+        if (data.name === username) {
           filteredCliques.push(data.groupName);
         }
       });
@@ -40,8 +65,12 @@ export default function FriendsScreen() {
 
   useFocusEffect(
     useCallback(() => {
-      fetchCliques();
-    }, [])
+      const fetchData = async () => {
+        await fetchUser();
+        fetchCliques();
+      };
+      fetchData();
+    }, [username])
   );
 
   return (
@@ -64,7 +93,7 @@ export default function FriendsScreen() {
             onPress={() => {
               router.push({
                 pathname: "/screens/friends/components/cliqueMembers",
-                params: { groupName: item },
+                params: { groupName: item, username: username },
               });
             }}
           >
