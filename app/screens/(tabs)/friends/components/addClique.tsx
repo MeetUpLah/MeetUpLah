@@ -11,8 +11,7 @@ import {
 import React, { useState } from "react";
 import createClique from "./createClique";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import auth from "@react-native-firebase/auth";
-import firestore from "@react-native-firebase/firestore";
+import checkUser from "./checkUser";
 
 export default function addClique() {
   const [userInput, setUserInput] = useState<string>("");
@@ -24,10 +23,15 @@ export default function addClique() {
     ? params.username[0]
     : params.username;
 
-  const handleAddList = () => {
+  const handleAddList = async () => {
     if (userInput.trim()) {
-      setList((prevItems) => [...prevItems, userInput.trim()]);
-      setUserInput("");
+      const isUserInDB = await checkUser(userInput.trim());
+      if (isUserInDB) {
+        setList((prevItems) => [...prevItems, userInput.trim()]);
+        setUserInput("");
+      } else {
+        alert("User not in database");
+      }
     }
   };
 

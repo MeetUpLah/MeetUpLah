@@ -11,6 +11,7 @@ import firestore from "@react-native-firebase/firestore";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import createClique from "./createClique";
+import checkUser from "./checkUser";
 
 export default function addFriends() {
   const router = useRouter();
@@ -24,10 +25,15 @@ export default function addFriends() {
     ? params.username[0]
     : params.username;
 
-  const handleAddFriend = () => {
+  const handleAddFriend = async () => {
     if (userInput.trim()) {
-      setMemberList((prevItem) => [...prevItem, userInput.trim()]);
-      setUserInput("");
+      const isUserInDB = await checkUser(userInput.trim());
+      if (isUserInDB) {
+        setMemberList((prevItem) => [...prevItem, userInput.trim()]);
+        setUserInput("");
+      } else {
+        alert("User not in database");
+      }
     }
   };
 
