@@ -17,9 +17,10 @@ const createClique = async (
     throw new Error("Group must have at least one member.");
   }
   try {
-    const db = firestore().collection("cliques").doc(groupName);
-    const subcollection = db.collection("members");
-    db.set({ name: username, groupName });
+    const userscliquedb = firestore().collection("cliques").doc(username);
+    const groupsdb = userscliquedb.collection("groups").doc(groupName);
+    groupsdb.set({ name: username, groupName: groupName });
+    const subcollection = groupsdb.collection("members");
     for (let i = 0; i < group.length; i++) {
       const memberName = group[i];
       if (memberName.trim()) {

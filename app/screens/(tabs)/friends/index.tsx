@@ -48,13 +48,16 @@ export default function FriendsScreen() {
   const fetchCliques = async () => {
     try {
       await fetchUser();
-      const db = await firestore().collection("cliques").get();
+      const db = await firestore()
+        .collection("cliques")
+        .doc(username)
+        .collection("groups")
+        .get();
       const filteredCliques: string[] = [];
       db.forEach((doc) => {
         const data = doc.data();
-        if (data.name === username) {
-          filteredCliques.push(data.groupName);
-        }
+        console.log(data.groupName);
+        filteredCliques.push(data.groupName);
       });
       setList(filteredCliques);
       console.log("Data fetched");

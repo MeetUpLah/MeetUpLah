@@ -19,6 +19,8 @@ const cliqueMembers = () => {
     try {
       const db = firestore()
         .collection("cliques")
+        .doc(username)
+        .collection("groups")
         .doc(groupName)
         .collection("members");
       const snapshot = await db.get();

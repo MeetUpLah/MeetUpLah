@@ -7,7 +7,6 @@ import {
   StyleSheet,
 } from "react-native";
 import React, { useState } from "react";
-import firestore from "@react-native-firebase/firestore";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import createClique from "./createClique";
