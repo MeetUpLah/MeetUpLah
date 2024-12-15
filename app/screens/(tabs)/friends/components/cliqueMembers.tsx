@@ -1,8 +1,16 @@
-import { View, Text, FlatList, StyleSheet, Button } from "react-native";
+import {
+  View,
+  Text,
+  FlatList,
+  StyleSheet,
+  Button,
+  TouchableOpacity,
+} from "react-native";
 import React, { useCallback, useEffect, useState } from "react";
 import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import firestore from "@react-native-firebase/firestore";
+import { Alert } from "react-native";
 
 const cliqueMembers = () => {
   const params = useLocalSearchParams();
@@ -14,6 +22,20 @@ const cliqueMembers = () => {
     ? params.username[0]
     : params.username;
   const [list, setList] = useState<string[]>([]);
+
+  const handleDelete = async () => {
+    try {
+      const db = await firestore()
+        .collection("cliques")
+        .doc(username)
+        .collection("groups")
+        .doc(groupName);
+      db.delete().then(() => console.log("group deleted"));
+      router.back();
+    } catch (error: any) {
+      console.error("error when deleting group");
+    }
+  };
 
   const fetchClique = async () => {
     try {
@@ -60,6 +82,22 @@ const cliqueMembers = () => {
         keyExtractor={(item, index) => index.toString()}
         renderItem={({ item }) => <Text style={styles.Friends}>{item}</Text>}
         style={styles.list}
+      />
+      <Button
+        title="Delete Group"
+        onPress={() => {
+          Alert.alert("Are you sure?", "", [
+            {
+              text: "No",
+              onPress: () => console.log("Cancel Pressed"),
+              style: "cancel",
+            },
+            {
+              text: "Yes",
+              onPress: () => handleDelete(),
+            },
+          ]);
+        }}
       />
     </SafeAreaView>
   );
