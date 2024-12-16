@@ -5,6 +5,7 @@ import {
   StyleSheet,
   Button,
   TouchableOpacity,
+  ActivityIndicator,
 } from "react-native";
 import React, { useCallback, useEffect, useState } from "react";
 import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
@@ -21,7 +22,9 @@ const cliqueMembers = () => {
   const username = Array.isArray(params.username)
     ? params.username[0]
     : params.username;
+
   const [list, setList] = useState<string[]>([]);
+  const [loading, setLoading] = useState(false);
 
   const handleDelete = async () => {
     try {
@@ -39,6 +42,7 @@ const cliqueMembers = () => {
 
   const fetchClique = async () => {
     try {
+      setLoading(true);
       const db = firestore()
         .collection("cliques")
         .doc(username)
@@ -57,6 +61,8 @@ const cliqueMembers = () => {
       console.log("Data fetched");
     } catch (Error) {
       console.error("Error in fetching members");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -77,12 +83,16 @@ const cliqueMembers = () => {
           });
         }}
       />
-      <FlatList
-        data={list}
-        keyExtractor={(item, index) => index.toString()}
-        renderItem={({ item }) => <Text style={styles.Friends}>{item}</Text>}
-        style={styles.list}
-      />
+      {loading ? (
+        <ActivityIndicator size={"small"} color={"blue"} />
+      ) : (
+        <FlatList
+          data={list}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={({ item }) => <Text style={styles.Friends}>{item}</Text>}
+          style={styles.list}
+        />
+      )}
       <Button
         title="Delete Group"
         onPress={() => {

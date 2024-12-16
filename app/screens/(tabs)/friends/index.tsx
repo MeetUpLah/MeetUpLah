@@ -5,11 +5,13 @@ import {
   StyleSheet,
   TouchableOpacity,
   FlatList,
+  ActivityIndicator,
 } from "react-native";
 import firestore from "@react-native-firebase/firestore";
 import { useCallback, useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import auth from "@react-native-firebase/auth";
+import { Colors } from "react-native/Libraries/NewAppScreen";
 
 export default function FriendsScreen() {
   const router = useRouter();
@@ -18,6 +20,7 @@ export default function FriendsScreen() {
 
   const [list, setList] = useState<string[]>([]);
   const [username, setUsername] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleAddClique = () => {
     router.push({
@@ -47,6 +50,7 @@ export default function FriendsScreen() {
 
   const fetchCliques = async () => {
     try {
+      setLoading(true);
       await fetchUser();
       const db = await firestore()
         .collection("cliques")
@@ -60,9 +64,11 @@ export default function FriendsScreen() {
         filteredCliques.push(data.groupName);
       });
       setList(filteredCliques);
-      console.log("Data fetched");
+      console.log("Clique data fetched");
     } catch (Error) {
       console.error("error in fetching");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -87,24 +93,28 @@ export default function FriendsScreen() {
           <Text style={styles.buttonText}>Add Clique</Text>
         </TouchableOpacity>
       </View>
-      <FlatList
-        data={list}
-        keyExtractor={(data, index) => index.toString()}
-        renderItem={({ item }) => (
-          <TouchableOpacity
-            style={styles.cliqueNameContainer}
-            onPress={() => {
-              router.push({
-                pathname: "/screens/friends/components/cliqueMembers",
-                params: { groupName: item, username: username },
-              });
-            }}
-          >
-            <Text style={styles.groupName}>{item}</Text>
-          </TouchableOpacity>
-        )}
-        style={styles.list}
-      />
+      {loading ? (
+        <ActivityIndicator size={"small"} color={"blue"} />
+      ) : (
+        <FlatList
+          data={list}
+          keyExtractor={(data, index) => index.toString()}
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              style={styles.cliqueNameContainer}
+              onPress={() => {
+                router.push({
+                  pathname: "/screens/friends/components/cliqueMembers",
+                  params: { groupName: item, username: username },
+                });
+              }}
+            >
+              <Text style={styles.groupName}>{item}</Text>
+            </TouchableOpacity>
+          )}
+          style={styles.list}
+        />
+      )}
     </SafeAreaView>
   );
 }
