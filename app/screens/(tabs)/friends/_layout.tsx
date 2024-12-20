@@ -9,16 +9,20 @@ const FriendLayout = () => {
         options={{ headerShown: false, title: "Friends" }}
       />
       <Stack.Screen
-        name="components/addClique"
+        name="screens/addClique"
         options={{ title: "Add Clique" }}
       />
       <Stack.Screen
-        name="components/addFriends"
+        name="screens/addFriendsInClique"
         options={{ title: "AddFriends" }}
       />
       <Stack.Screen
-        name="components/cliqueMembers"
+        name="screens/cliqueMembers"
         options={{ title: "Members" }}
+      />
+      <Stack.Screen
+        name="screens/Friendlist"
+        options={{ title: "FriendList" }}
       />
     </Stack>
   );

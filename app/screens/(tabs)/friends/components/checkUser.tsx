@@ -16,11 +16,11 @@ const checkUser = async (currUid: string, username: string) => {
     if (data.username === username) {
       if (data.username === curruser.data()?.username) {
         Alert.alert("You can't add yourself");
-        return false; // Early return to stop the function after alert
+        return false;
       } else {
         isUserInDB = true;
         console.log(`${username} is in the database`);
-        break; // Exit the loop early as the user is found
+        break;
       }
     }
   }

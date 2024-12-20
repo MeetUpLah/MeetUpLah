@@ -1,31 +1,32 @@
 import {
   View,
   Text,
-  SafeAreaView,
   TextInput,
   Button,
   FlatList,
   StyleSheet,
 } from "react-native";
-
 import React, { useState } from "react";
-import createClique from "./createClique";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import checkUser from "./checkUser";
+import createClique from "../components/createClique";
+import checkUser from "../components/checkUser";
 
-export default function addClique() {
-  const [userInput, setUserInput] = useState<string>("");
-  const [groupName, setGroupName] = useState<string>("");
-  const [list, setList] = useState<string[]>([]);
+export default function addFriendsInClique() {
   const router = useRouter();
+  const [userInput, setUserInput] = useState("");
+  const [memberList, setMemberList] = useState<string[]>([]);
   const params = useLocalSearchParams();
+  const groupName = Array.isArray(params.groupName)
+    ? params.groupName[0]
+    : params.groupName;
   const uid = Array.isArray(params.uid) ? params.uid[0] : params.uid;
 
-  const handleAddList = async () => {
+  const handleAddFriend = async () => {
     if (userInput.trim()) {
       const isUserInDB = await checkUser(uid, userInput.trim());
       if (isUserInDB) {
-        setList((prevItems) => [...prevItems, userInput.trim()]);
+        setMemberList((prevItem) => [...prevItem, userInput.trim()]);
         setUserInput("");
       }
     }
@@ -33,36 +34,27 @@ export default function addClique() {
 
   return (
     <SafeAreaView>
-      <Text style={styles.questions}>What is your group name</Text>
-      <TextInput
-        placeholder="Groupname"
-        value={groupName}
-        onChangeText={setGroupName}
-        style={styles.answerContainers}
-      />
       <Text style={styles.questions}>Who do you want to add</Text>
       <TextInput
         placeholder="Friend"
-        value={userInput}
         onChangeText={setUserInput}
+        value={userInput}
         style={styles.answerContainers}
       />
-      <Button title="Add Friend" onPress={handleAddList} />
-      {groupName && <Text style={styles.groupName}>{groupName}</Text>}
-      {list.length > 0 && (
+      <Button title="Add Friend" onPress={handleAddFriend} />
+      {memberList.length > 0 && (
         <FlatList
-          data={list}
+          data={memberList}
           keyExtractor={(item, index) => index.toString()}
           renderItem={({ item }) => <Text style={styles.Friends}>{item}</Text>}
           style={styles.list}
         />
       )}
       <Button
-        title="Create Clique"
+        title="Confirm"
         onPress={async () => {
           try {
-            await createClique(groupName, list, router, uid);
-            alert("Clique created successfully!");
+            await createClique(groupName, memberList, router, uid);
           } catch (error: any) {
             alert(error.message);
           }
@@ -98,15 +90,5 @@ const styles = StyleSheet.create({
   },
   list: {
     marginTop: 30,
-  },
-  groupName: {
-    textAlign: "center",
-    fontWeight: "300",
-    fontSize: 50,
-    borderWidth: 2,
-    backgroundColor: "red",
-    width: 400,
-    alignSelf: "center",
-    color: "white",
   },
 });

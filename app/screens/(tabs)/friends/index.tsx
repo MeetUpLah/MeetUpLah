@@ -15,21 +15,35 @@ import auth from "@react-native-firebase/auth";
 import { Colors } from "react-native/Libraries/NewAppScreen";
 import Menu from "./components/Menu";
 import AntDesign from "@expo/vector-icons/AntDesign";
+import addFriend from "./screens/addFriend";
 
 export default function FriendsScreen() {
   const router = useRouter();
   const user = auth().currentUser;
-  const email = user?.email;
+  const uid = user?.uid;
 
   const [list, setList] = useState<string[]>([]);
-  const [username, setUsername] = useState("");
   const [loading, setLoading] = useState(false);
   const [visibility, setVisibility] = useState(false);
 
   const handleAddClique = () => {
     router.push({
-      pathname: "/screens/friends/components/addClique",
-      params: { username: username },
+      pathname: "/screens/friends/screens/addClique",
+      params: { uid: uid },
+    });
+  };
+
+  const handleShowFriends = () => {
+    router.push({
+      pathname: "/screens/friends/screens/Friendlist",
+      params: { uid: uid },
+    });
+  };
+
+  const handleAddFriend = () => {
+    router.push({
+      pathname: "/screens/friends/screens/addFriend",
+      params: { uid: uid },
     });
   };
 
@@ -37,32 +51,12 @@ export default function FriendsScreen() {
     setVisibility(true);
   };
 
-  const fetchUser = async () => {
-    try {
-      const users = await firestore().collection("users").get();
-      let fetchedusername = "";
-      users.forEach((doc) => {
-        const data = doc.data();
-        if (email === data.email.toLowerCase()) {
-          fetchedusername = data.username;
-          console.log("fetched user" + fetchedusername);
-          setUsername(fetchedusername);
-          console.log(username);
-        }
-      });
-      console.log(username);
-    } catch (Error) {
-      console.log("error in fetching username");
-    }
-  };
-
   const fetchCliques = async () => {
     try {
       setLoading(true);
-      await fetchUser();
       const db = await firestore()
-        .collection("cliques")
-        .doc(username)
+        .collection("users")
+        .doc(uid)
         .collection("groups")
         .get();
       const filteredCliques: string[] = [];
@@ -83,11 +77,10 @@ export default function FriendsScreen() {
   useFocusEffect(
     useCallback(() => {
       const fetchData = async () => {
-        await fetchUser();
         fetchCliques();
       };
       fetchData();
-    }, [username])
+    }, [uid])
   );
 
   return (
@@ -104,7 +97,12 @@ export default function FriendsScreen() {
                   "Add Friends",
                   "Show Friends",
                 ]}
-                menuFunctions={[handleAddClique]}
+                menuFunctions={[
+                  handleAddClique,
+                  () => {},
+                  handleAddFriend,
+                  handleShowFriends,
+                ]}
               />
             </View>
           ) : (
@@ -127,8 +125,8 @@ export default function FriendsScreen() {
                 style={styles.cliqueNameContainer}
                 onPress={() => {
                   router.push({
-                    pathname: "/screens/friends/components/cliqueMembers",
-                    params: { groupName: item, username: username },
+                    pathname: "/screens/friends/screens/cliqueMembers",
+                    params: { groupName: item, uid: uid },
                   });
                 }}
               >
@@ -184,6 +182,7 @@ const styles = StyleSheet.create({
     fontSize: 30,
     fontWeight: 300,
     textAlign: "center",
+    display: "flex",
   },
   header: {
     flexDirection: "row",
@@ -201,6 +200,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 140,
     right: 50,
-    zIndex: -1, // Set the list below the menu
+    zIndex: -1,
+    left: 50,
   },
 });

@@ -76,7 +76,7 @@ const cliqueMembers = () => {
         title="Add more friends?"
         onPress={() => {
           router.push({
-            pathname: "/screens/friends/components/addFriends",
+            pathname: "/screens/(tabs)/friends/screens/addFriendsInClique",
             params: { groupName: groupName, uid: uid },
           });
         }}
