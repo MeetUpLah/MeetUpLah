@@ -19,18 +19,14 @@ export default function addClique() {
   const [list, setList] = useState<string[]>([]);
   const router = useRouter();
   const params = useLocalSearchParams();
-  const username = Array.isArray(params.username)
-    ? params.username[0]
-    : params.username;
+  const uid = Array.isArray(params.uid) ? params.uid[0] : params.uid;
 
   const handleAddList = async () => {
     if (userInput.trim()) {
-      const isUserInDB = await checkUser(userInput.trim());
+      const isUserInDB = await checkUser(uid, userInput.trim());
       if (isUserInDB) {
         setList((prevItems) => [...prevItems, userInput.trim()]);
         setUserInput("");
-      } else {
-        alert("User not in database");
       }
     }
   };
@@ -65,7 +61,7 @@ export default function addClique() {
         title="Create Clique"
         onPress={async () => {
           try {
-            await createClique(groupName, list, router, username);
+            await createClique(groupName, list, router, uid);
             alert("Clique created successfully!");
           } catch (error: any) {
             alert(error.message);

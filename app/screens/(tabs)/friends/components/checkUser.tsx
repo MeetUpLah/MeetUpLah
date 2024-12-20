@@ -1,17 +1,34 @@
 import firestore from "@react-native-firebase/firestore";
+import { Alert } from "react-native";
 
-const checkUser = async (username: string) => {
+const checkUser = async (currUid: string, username: string) => {
   const usersDB = await firestore().collection("users").get();
+  const curruser = await firestore().collection("users").doc(currUid).get();
+
+  if (!curruser.exists) {
+    Alert.alert("Error", "Current user does not exist.");
+    return false;
+  }
+
   let isUserInDB: boolean = false;
-  usersDB.forEach((doc) => {
+  for (const doc of usersDB.docs) {
     const data = doc.data();
     if (data.username === username) {
-      isUserInDB = true;
-      console.log(username + "is in database");
+      if (data.username === curruser.data()?.username) {
+        Alert.alert("You can't add yourself");
+        return false; // Early return to stop the function after alert
+      } else {
+        isUserInDB = true;
+        console.log(`${username} is in the database`);
+        break; // Exit the loop early as the user is found
+      }
     }
-  });
-  console.log("isUserInDB = " + isUserInDB);
+  }
+  if (!isUserInDB) {
+    Alert.alert("User not in database");
+  }
+
+  console.log("isUserInDB =", isUserInDB);
   return isUserInDB;
 };
-
 export default checkUser;

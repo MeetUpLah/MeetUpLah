@@ -16,45 +16,24 @@ import { Colors } from "react-native/Libraries/NewAppScreen";
 export default function FriendsScreen() {
   const router = useRouter();
   const user = auth().currentUser;
-  const email = user?.email;
+  const uid = user?.uid;
 
   const [list, setList] = useState<string[]>([]);
-  const [username, setUsername] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleAddClique = () => {
     router.push({
       pathname: "/screens/friends/components/addClique",
-      params: { username: username },
+      params: { uid: uid },
     });
-  };
-
-  const fetchUser = async () => {
-    try {
-      const users = await firestore().collection("users").get();
-      let fetchedusername = "";
-      users.forEach((doc) => {
-        const data = doc.data();
-        if (email === data.email.toLowerCase()) {
-          fetchedusername = data.username;
-          console.log("fetched user" + fetchedusername);
-          setUsername(fetchedusername);
-          console.log(username);
-        }
-      });
-      console.log(username);
-    } catch (Error) {
-      console.log("error in fetching username");
-    }
   };
 
   const fetchCliques = async () => {
     try {
       setLoading(true);
-      await fetchUser();
       const db = await firestore()
-        .collection("cliques")
-        .doc(username)
+        .collection("users")
+        .doc(uid)
         .collection("groups")
         .get();
       const filteredCliques: string[] = [];
@@ -75,11 +54,10 @@ export default function FriendsScreen() {
   useFocusEffect(
     useCallback(() => {
       const fetchData = async () => {
-        await fetchUser();
         fetchCliques();
       };
       fetchData();
-    }, [username])
+    }, [uid])
   );
 
   return (
@@ -105,7 +83,7 @@ export default function FriendsScreen() {
               onPress={() => {
                 router.push({
                   pathname: "/screens/friends/components/cliqueMembers",
-                  params: { groupName: item, username: username },
+                  params: { groupName: item, uid: uid },
                 });
               }}
             >
