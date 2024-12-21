@@ -19,8 +19,6 @@ const addFriendList = async (uid: string, router: any, username: string) => {
       router.back();
       alert("friend added into friendlist");
     }
-  } else {
-    alert("user not in database");
   }
 };
 

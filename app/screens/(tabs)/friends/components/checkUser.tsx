@@ -10,25 +10,33 @@ const checkUser = async (currUid: string, username: string) => {
     return false;
   }
 
-  let isUserInDB: boolean = false;
+  let isUserInDB = false;
+  let isCurrUser = false;
+
   for (const doc of usersDB.docs) {
     const data = doc.data();
+
+    if (data.username === curruser.data()?.username) {
+      isCurrUser = true;
+      break;
+    }
+
+    // Check if the user exists in the database
     if (data.username === username) {
-      if (data.username === curruser.data()?.username) {
-        Alert.alert("You can't add yourself");
-        return false;
-      } else {
-        isUserInDB = true;
-        console.log(`${username} is in the database`);
-        break;
-      }
+      isUserInDB = true;
+      console.log(`${username} is in the database`);
+      break; // Exit the loop once we find the user
     }
   }
-  if (!isUserInDB) {
-    Alert.alert("User not in database");
+
+  if (isCurrUser) {
+    Alert.alert("You cant add yourself");
+  } else if (!isUserInDB) {
+    Alert.alert("User not in Database");
   }
 
   console.log("isUserInDB =", isUserInDB);
   return isUserInDB;
 };
+
 export default checkUser;
