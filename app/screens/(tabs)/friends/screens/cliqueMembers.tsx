@@ -19,9 +19,7 @@ const cliqueMembers = () => {
   const groupName = Array.isArray(params.groupName)
     ? params.groupName[0]
     : params.groupName;
-  const username = Array.isArray(params.username)
-    ? params.username[0]
-    : params.username;
+  const uid = Array.isArray(params.uid) ? params.uid[0] : params.uid;
 
   const [list, setList] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
@@ -29,8 +27,8 @@ const cliqueMembers = () => {
   const handleDelete = async () => {
     try {
       const db = await firestore()
-        .collection("cliques")
-        .doc(username)
+        .collection("users")
+        .doc(uid)
         .collection("groups")
         .doc(groupName);
       db.delete().then(() => console.log("group deleted"));
@@ -44,8 +42,8 @@ const cliqueMembers = () => {
     try {
       setLoading(true);
       const db = firestore()
-        .collection("cliques")
-        .doc(username)
+        .collection("users")
+        .doc(uid)
         .collection("groups")
         .doc(groupName)
         .collection("members");
@@ -78,8 +76,8 @@ const cliqueMembers = () => {
         title="Add more friends?"
         onPress={() => {
           router.push({
-            pathname: "/screens/friends/components/addFriends",
-            params: { groupName: groupName, username: username },
+            pathname: "/screens/(tabs)/friends/screens/addFriendsInClique",
+            params: { groupName: groupName, uid: uid },
           });
         }}
       />

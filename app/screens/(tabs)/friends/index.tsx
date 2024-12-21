@@ -6,55 +6,57 @@ import {
   TouchableOpacity,
   FlatList,
   ActivityIndicator,
+  TouchableWithoutFeedback,
 } from "react-native";
 import firestore from "@react-native-firebase/firestore";
 import { useCallback, useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import auth from "@react-native-firebase/auth";
 import { Colors } from "react-native/Libraries/NewAppScreen";
+import Menu from "./components/Menu";
+import AntDesign from "@expo/vector-icons/AntDesign";
+import addFriend from "./screens/addFriend";
 
 export default function FriendsScreen() {
   const router = useRouter();
   const user = auth().currentUser;
-  const email = user?.email;
+  const uid = user?.uid;
 
   const [list, setList] = useState<string[]>([]);
-  const [username, setUsername] = useState("");
   const [loading, setLoading] = useState(false);
+  const [visibility, setVisibility] = useState(false);
 
   const handleAddClique = () => {
     router.push({
-      pathname: "/screens/friends/components/addClique",
-      params: { username: username },
+      pathname: "/screens/friends/screens/addClique",
+      params: { uid: uid },
     });
   };
 
-  const fetchUser = async () => {
-    try {
-      const users = await firestore().collection("users").get();
-      let fetchedusername = "";
-      users.forEach((doc) => {
-        const data = doc.data();
-        if (email === data.email.toLowerCase()) {
-          fetchedusername = data.username;
-          console.log("fetched user" + fetchedusername);
-          setUsername(fetchedusername);
-          console.log(username);
-        }
-      });
-      console.log(username);
-    } catch (Error) {
-      console.log("error in fetching username");
-    }
+  const handleShowFriends = () => {
+    router.push({
+      pathname: "/screens/friends/screens/Friendlist",
+      params: { uid: uid },
+    });
+  };
+
+  const handleAddFriend = () => {
+    router.push({
+      pathname: "/screens/friends/screens/addFriend",
+      params: { uid: uid },
+    });
+  };
+
+  const handleOpenMenu = () => {
+    setVisibility(true);
   };
 
   const fetchCliques = async () => {
     try {
       setLoading(true);
-      await fetchUser();
       const db = await firestore()
-        .collection("cliques")
-        .doc(username)
+        .collection("users")
+        .doc(uid)
         .collection("groups")
         .get();
       const filteredCliques: string[] = [];
@@ -75,59 +77,81 @@ export default function FriendsScreen() {
   useFocusEffect(
     useCallback(() => {
       const fetchData = async () => {
-        await fetchUser();
         fetchCliques();
       };
       fetchData();
-    }, [username])
+    }, [uid])
   );
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Clique Page</Text>
-        <TouchableOpacity
-          style={styles.buttonContainer}
-          onPress={handleAddClique}
-        >
-          <Text style={styles.buttonText}>Add Clique</Text>
-        </TouchableOpacity>
-      </View>
-      {loading ? (
-        <ActivityIndicator size={"small"} color={"blue"} />
-      ) : (
-        <FlatList
-          data={list}
-          keyExtractor={(data, index) => index.toString()}
-          renderItem={({ item }) => (
-            <TouchableOpacity
-              style={styles.cliqueNameContainer}
-              onPress={() => {
-                router.push({
-                  pathname: "/screens/friends/components/cliqueMembers",
-                  params: { groupName: item, username: username },
-                });
-              }}
-            >
-              <Text style={styles.groupName}>{item}</Text>
-            </TouchableOpacity>
+    <TouchableWithoutFeedback onPress={() => setVisibility(false)}>
+      <SafeAreaView style={styles.container}>
+        <View style={styles.header}>
+          <Text style={styles.title}>Your Cliques</Text>
+          {visibility ? (
+            <View style={styles.menuContainer}>
+              <Menu
+                menuItems={[
+                  "Add Clique",
+                  "Edit Clique",
+                  "Add Friends",
+                  "Show Friends",
+                ]}
+                menuFunctions={[
+                  handleAddClique,
+                  () => {},
+                  handleAddFriend,
+                  handleShowFriends,
+                ]}
+              />
+            </View>
+          ) : (
+            <AntDesign
+              name="bars"
+              size={48}
+              color="white"
+              onPress={handleOpenMenu}
+            />
           )}
-          style={styles.list}
-        />
-      )}
-    </SafeAreaView>
+        </View>
+        {loading ? (
+          <ActivityIndicator size={"small"} color={"white"} />
+        ) : (
+          <FlatList
+            data={list}
+            keyExtractor={(data, index) => index.toString()}
+            renderItem={({ item }) => (
+              <TouchableOpacity
+                style={styles.cliqueNameContainer}
+                onPress={() => {
+                  router.push({
+                    pathname: "/screens/friends/screens/cliqueMembers",
+                    params: { groupName: item, uid: uid },
+                  });
+                }}
+              >
+                <Text style={styles.groupName}>{item}</Text>
+              </TouchableOpacity>
+            )}
+            style={styles.list}
+          />
+        )}
+      </SafeAreaView>
+    </TouchableWithoutFeedback>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "#102129",
   },
   title: {
     fontSize: 50,
     fontWeight: "bold",
     marginBottom: 20,
     position: "relative",
+    color: "white",
   },
   buttonContainer: {
     backgroundColor: "black",
@@ -144,7 +168,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   cliqueNameContainer: {
-    backgroundColor: "aquamarine",
+    backgroundColor: "#FFBBCC",
     borderRadius: 5,
     paddingVertical: 20,
     paddingHorizontal: 50,
@@ -158,12 +182,25 @@ const styles = StyleSheet.create({
     fontSize: 30,
     fontWeight: 300,
     textAlign: "center",
+    display: "flex",
   },
   header: {
     flexDirection: "row",
     justifyContent: "space-between",
   },
+  menuContainer: {
+    position: "absolute",
+    top: 20,
+    right: 0,
+    zIndex: 100,
+    backgroundColor: "black",
+    color: "white",
+  },
   list: {
-    marginTop: 10,
+    position: "absolute",
+    top: 140,
+    right: 50,
+    zIndex: -1,
+    left: 50,
   },
 });

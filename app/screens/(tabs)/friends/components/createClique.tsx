@@ -7,7 +7,7 @@ const createClique = async (
   groupName: string,
   group: string[],
   router: any,
-  username: string
+  uid: string
 ) => {
   if (!groupName.trim()) {
     throw new Error("Group name cannot be empty.");
@@ -17,9 +17,9 @@ const createClique = async (
     throw new Error("Group must have at least one member.");
   }
   try {
-    const userscliquedb = firestore().collection("cliques").doc(username);
+    const userscliquedb = firestore().collection("users").doc(uid);
     const groupsdb = userscliquedb.collection("groups").doc(groupName);
-    groupsdb.set({ name: username, groupName: groupName });
+    await groupsdb.set({ uid: uid, groupName: groupName });
     const subcollection = groupsdb.collection("members");
     for (let i = 0; i < group.length; i++) {
       const memberName = group[i];
@@ -30,6 +30,7 @@ const createClique = async (
     console.log("successfully added");
     router.back();
   } catch (error) {
+    console.error(error);
     console.error("Problem as occured");
   }
 };

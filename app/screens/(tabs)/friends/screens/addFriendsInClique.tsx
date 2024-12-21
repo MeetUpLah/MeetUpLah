@@ -9,10 +9,10 @@ import {
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import createClique from "./createClique";
-import checkUser from "./checkUser";
+import createClique from "../components/createClique";
+import checkUser from "../components/checkUser";
 
-export default function addFriends() {
+export default function addFriendsInClique() {
   const router = useRouter();
   const [userInput, setUserInput] = useState("");
   const [memberList, setMemberList] = useState<string[]>([]);
@@ -20,18 +20,14 @@ export default function addFriends() {
   const groupName = Array.isArray(params.groupName)
     ? params.groupName[0]
     : params.groupName;
-  const username = Array.isArray(params.username)
-    ? params.username[0]
-    : params.username;
+  const uid = Array.isArray(params.uid) ? params.uid[0] : params.uid;
 
   const handleAddFriend = async () => {
     if (userInput.trim()) {
-      const isUserInDB = await checkUser(userInput.trim());
+      const isUserInDB = await checkUser(uid, userInput.trim());
       if (isUserInDB) {
         setMemberList((prevItem) => [...prevItem, userInput.trim()]);
         setUserInput("");
-      } else {
-        alert("User not in database");
       }
     }
   };
@@ -58,7 +54,7 @@ export default function addFriends() {
         title="Confirm"
         onPress={async () => {
           try {
-            await createClique(groupName, memberList, router, username);
+            await createClique(groupName, memberList, router, uid);
           } catch (error: any) {
             alert(error.message);
           }
